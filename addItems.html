@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    type="text/css" />
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js">
+  </script>
+  <style>
+    #loading {
+      display: none;
+    }
+
+    #success {
+      display: none;
+      color: green;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">Inventory Management</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+          aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="index.html">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="itemsList.html">Item List</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="addItems.html">Add Items</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main class="container py-4">
+    <h1>Add Items</h1>
+
+    <form id="addItem">
+      <label for="itemName" class="mb-2">Item Name:</label>
+      <input type="text" id="itemName" class="form-control" required /><br>
+      <label for="quantity" class="mb-2">Quantity:</label>
+      <input type="number" id="quantity" class="form-control" required /><br>
+      <label for="category" class="mb-2">Category:</label>
+      <select id="category" class="form-control" style="appearance: auto;" required>
+        <option value="Perishable">Perishable</option>
+        <option value="Non-Perishable">Non-Perishable</option>
+      </select><br>
+      <button type="submit" class="btn btn-primary">Add Items</button>
+    </form>
+  </main>
+
+  <div id="loading" class="container">Saving Data...</div>
+  <div id="success" class="container">Item Added Successfully!</div>
+
+  <script>
+    const addItem = document.querySelector("#addItem")
+    const itemName = document.querySelector("#itemName")
+    const quantity = document.querySelector("#quantity")
+    const category = document.querySelector("#category")
+    const loadingContainer = document.querySelector("#loading")
+    const successContainer = document.querySelector("#success")
+    const apiUrl = 'https://inventory-management-student-neog-ca.replit.app/inventory'
+
+    addItem.addEventListener("submit", function (event) {
+      event.preventDefault()
+      loadingContainer.style.display = "block"
+
+      const inventoryData = {
+        itemName: itemName.value,
+        quantity: quantity.value,
+        category: category.value,
+      }
+
+      fetch(apiUrl, {
+        method: "POST",
+        body: JSON.stringify(inventoryData),
+        headers: {
+          'content-Type': 'application/json'
+        }
+      })
+        .then(function (response) {
+          return response.json()
+        })
+        .then(function (data) {
+          if (data) {
+            loadingContainer.style.display = "none"
+            successContainer.style.display = "block"
+          }
+        })
+    })
+  </script>
+</body>
+
+</html>
